@@ -8,7 +8,8 @@ COPY . /opt
 
 # Running pip install to download required packages
 RUN apt-get update ##[edited]
-RUN pip install -r requirements.txt
+RUN pip install -r requirements_base.txt
+RUN pip install -r requirements_extra.txt
 RUN pip install jupyter
 
 
