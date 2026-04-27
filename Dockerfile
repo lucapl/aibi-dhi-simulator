@@ -1,5 +1,5 @@
 # Include the base image for the docker
-FROM python:3.8
+FROM python:3.12
 
 # Setting working directory to /opt, rather than doing all the work in root.
 # Copying the /code directory into /opt
@@ -13,4 +13,4 @@ RUN pip install jupyter
 
 
 # Setting the default code to run when a container is launced with this image.
-CMD ["jupyter", "notebook", "--port=88899", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
+CMD ["jupyter", "notebook", "--port=8899", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
