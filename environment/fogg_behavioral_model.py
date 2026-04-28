@@ -213,6 +213,16 @@ class Patient(Env):
         sufficient_sleep = 1 if number_of_hours_slept > 7 else 0
         return self.valence + self.has_family + self.last_activity_score + sufficient_sleep
 
+    def is_tired_of_repeating_the_activity(self):
+        n = self.activity_p  # 0  if the activity was already performed twice
+        if n == 0:
+            not_tired_of_repeating_the_activity = 1
+        elif n == 1:
+            not_tired_of_repeating_the_activity = 0
+        else:
+            not_tired_of_repeating_the_activity = -1
+        return -not_tired_of_repeating_the_activity
+
     def get_ability(self):
         """"
         1)Chan et al (2020) "Prompto: Investigating Receptivity to Prompts Based on Cognitive Load from Memory Training
@@ -233,23 +243,20 @@ class Patient(Env):
         "
 
         Other:
-        task_difficulty,
+        task_difficulty,    
         length
         sequence mining SPADE
         """
 
-        n = self.activity_p  # 0  if the activity was already performed twice
-        if n == 0:
-            not_tired_of_repeating_the_activity = 1
-        elif n == 1:
-            not_tired_of_repeating_the_activity = 0
-        else:
-            not_tired_of_repeating_the_activity = -1
+        not_tired_of_repeating_the_activity = -self.is_tired_of_repeating_the_activity()
         ready = self._time_since_last_activity()
         load = 1 if self.cognitive_load == 0 else 0
         confidence = 1 if sum(self.activity_performed) >= self.confidence_threshold else 0
 
         return confidence + load + not_tired_of_repeating_the_activity + ready
+    
+    def should_prompt(self):
+        return 1 if self.awake_list[-1] != 'sleeping' else 0  # do not prompt when patient sleep
 
     def get_trigger(self):
         """"
@@ -279,14 +286,16 @@ class Patient(Env):
 
         """
 
-        prompt = 1 if self.awake_list[-1] != 'sleeping' else 0  # do not prompt when patient sleep
+        if self.should_prompt() == 0:
+            return 0
+
         good_time = 1 if self._get_time_day() == self.good_time else 0
         good_day = 1 if self._get_week_day() == 1 else 0
         good_location = 1 if self.location == 'home' else 0
         good_motion = 1 if self.motion_activity_list[-1] == 'stationary' else 0
         good_arousal = 1 if self.arousal == 1 else 0
 
-        return (good_arousal + good_day + good_time + good_location + good_motion) * prompt
+        return good_arousal + good_day + good_time + good_location + good_motion
 
     def update_state(self):
         self._update_time()

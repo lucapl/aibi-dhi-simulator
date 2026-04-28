@@ -10,7 +10,7 @@ if __name__ == "__main__":
                         nargs='*',
                         default=list(PROFILES.keys()),
                         help="List of profiles to run experiments for. Default is all profiles.")
-    parser.add_argument("--behavior_threshold", type=int, default=20)
+    #parser.add_argument("--behavior_threshold", type=int, default=20)
     parser.add_argument("--results_directory", type=str, default='results')
     parser.add_argument("--time_preference_update_step", type=int, default=9999999999999999)
     parser.add_argument("--habituation", action='store_true')
@@ -21,7 +21,7 @@ if __name__ == "__main__":
         res_dir = (Path(args.results_directory)/profile).as_posix()
         params = dict(runs=args.runs,
                             profile=profile,
-                            behavior_threshold=args.behavior_threshold,
+                            #behavior_threshold=args.behavior_threshold,
                             time_preference_update_step=args.time_preference_update_step, 
                             habituation=args.habituation,
                             results_directory=res_dir)
