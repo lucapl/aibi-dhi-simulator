@@ -6,6 +6,3 @@ A fork of custom OpenAI Gym / Gymnasium environment simulating patients behavior
 Eliza Czaplicka 151963
 Michał Kałmucki 151944
 Jędrzej Pacanowski 151952
-
-# Patient profiles
-Patient profiles were modeled based on https://ceur-ws.org/Vol-3060/paper-5.pdf
